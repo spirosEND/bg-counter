@@ -2,14 +2,34 @@
  This is jquery module for main page
  ------------------------------------------------------------------------------ */
 
- /* Global constants */
-
- /*global jQuery */
- jQuery(function ($) {
+/*global jQuery */
+jQuery(function ($) {
   'use strict';
 
-  // Update copyright year
-  document.getElementById('currentYear').textContent = new Date().getFullYear();
+  // Function to get the last day of June
+  const getLastDayOfJune = () => {
+    const currentYear = new Date().getFullYear();
+    return new Date(currentYear, 5, 30, 23, 59, 59); // Month is 0-based, so 5 is June
+  };
+
+  // Function to get or set the target date in localStorage
+  const getTargetDate = () => {
+    const storedDate = localStorage.getItem('countdownTargetDate');
+    if (storedDate) {
+      const parsedDate = new Date(storedDate);
+      // If the stored date is in the past, set a new target date for next year
+      if (parsedDate < new Date()) {
+        const newDate = getLastDayOfJune();
+        localStorage.setItem('countdownTargetDate', newDate.toISOString());
+        return newDate;
+      }
+      return parsedDate;
+    }
+    // If no stored date, set and return the last day of June
+    const targetDate = getLastDayOfJune();
+    localStorage.setItem('countdownTargetDate', targetDate.toISOString());
+    return targetDate;
+  };
 
   var App = {
     $options: {},
@@ -18,10 +38,10 @@
     $countdown: $('#countdown_dashboard'),
 
     bindEvents: function() {
-      //binding events
       $(window).on('load', this.load.bind(this));
       $(document).on('ready', this.docReady.bind(this));
     },
+    
     load: function() {
       /* ==============================================
       1.Page Preloader
@@ -29,58 +49,35 @@
       this.$loader.delay(300).fadeOut();
       this.$animationload.delay(600).fadeOut("slow");
     },
+    
     docReady: function() {
       /* -----------------------------------------------------------------------
         Countdown
         ----------------------------------------------------------------------- */
+        const targetDate = getTargetDate();
+        
         this.$countdown.countDown({
           targetDate: {
-            'day':    this.$options.day,
-            'month':  this.$options.month,
-            'year':   this.$options.year,
-            'hour':   this.$options.hour,
-            'min':    this.$options.min,
-            'sec':    this.$options.sec
+            'day':    targetDate.getDate(),
+            'month':  targetDate.getMonth() + 1, // JavaScript months are 0-based
+            'year':   targetDate.getFullYear(),
+            'hour':   targetDate.getHours(),
+            'min':    targetDate.getMinutes(),
+            'sec':    targetDate.getSeconds()
           },
           omitWeeks: true
         });
-
-      /* ==============================================
-      NiceScroll
-      =============================================== */
-      $("html").niceScroll({
-        scrollspeed: 50,
-        mousescrollstep: 38,
-        cursorwidth: 7,
-        cursorborder: 0,
-        autohidemode: true,
-        zindex: 9999999,
-        horizrailenabled: false,
-        cursorborderradius: 0
-      });
-
-      /* ==============================================
-      Parallax
-      =============================================== */
-      $(window).stellar({
-        horizontalScrolling: false,
-        responsive: true,
-        scrollProperty: 'scroll',
-        parallaxElements: false,
-        horizontalOffset: 0,
-        verticalOffset: 0
-      });
-
-      //custom app
-      
     },
+
     init: function (_options) {
       $.extend(this.$options, _options);
       this.bindEvents();
     }
   }
 
-  //Initializing the app
-  //passing the countdown date
-  App.init({day: 18, month: 2, year: 2016, hour: 11, min: 59, sec: 59});
-});
+  // Initialize the app
+  App.init();
+
+  // Set current year in copyright
+  document.getElementById('currentYear').textContent = new Date().getFullYear();
+}); 
