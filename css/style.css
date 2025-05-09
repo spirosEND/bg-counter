@@ -36,16 +36,22 @@ body {
 
 .brand-title {
     color: rgba(255, 255, 255, 0.75);
-    font-size: 3.5rem;
+    font-size: clamp(1.2rem, 4vw, 3.5rem);
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     margin: 0;
+    padding: 0 0.5rem;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
     background: linear-gradient(45deg, rgba(255, 255, 255, 0.75), rgba(240, 240, 240, 0.65));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: glow 3s ease-in-out infinite alternate;
+    word-wrap: break-word;
+    white-space: normal;
+    line-height: 1.2;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 @keyframes glow {
@@ -69,10 +75,12 @@ body {
 #home .large-header {
     background-image: url("../images/pattern.png"), url('../images/img-1 (2).jpg');
     background-position: center;
-    background-size: 100% auto;
+    background-size: cover;
     background-repeat: no-repeat;
     position: relative;
     min-height: 100vh;
+    width: 100%;
+    height: 100%;
 }
 
 #home .large-header::before {
@@ -96,13 +104,14 @@ body {
 .home-main {
     position: absolute;
     margin: 0;
-    padding: 0;
+    padding: 0 1rem;
     text-align: center;
     top: 50%;
     left: 50%;
     -webkit-transform: translate3d(-50%,-50%,0);
     transform: translate3d(-50%,-50%,0);
-    width: 50%;
+    width: 100%;
+    max-width: 1200px;
     z-index: 5;
 }
 
@@ -209,6 +218,10 @@ a.social-icon:hover .fa-envelope {
 
 /* Responsive styles */
 @media(max-height: 360px) {
+    #home .large-header {
+        background-size: cover;
+        background-position: center center;
+    }
     .digit {
         font-size: 30px;
         height: 50px;
@@ -217,6 +230,10 @@ a.social-icon:hover .fa-envelope {
 }
 
 @media(max-width: 560px) {
+    #home .large-header {
+        background-size: cover;
+        background-position: center center;
+    }
     #countdown_dashboard {
         min-width: 300px;
     }
@@ -235,13 +252,34 @@ a.social-icon:hover .fa-envelope {
     a.social-icon i {
         font-size: 1.4rem;
     }
+    .home-main {
+        width: 100%;
+        padding: 0 0.5rem;
+    }
+    .brand-title {
+        font-size: clamp(1rem, 3.5vw, 1.8rem);
+        padding: 0 0.25rem;
+        letter-spacing: 0.5px;
+    }
 }
 
-@media(min-width: 560px) and (max-width: 1024px) {
+@media(min-width: 561px) and (max-width: 1024px) {
+    #home .large-header {
+        background-size: cover;
+        background-position: center center;
+    }
     .digit {
         font-size: 40px;
         height: 80px;
         line-height: 80px;
+    }
+    .home-main {
+        width: 90%;
+        padding: 0 0.75rem;
+    }
+    .brand-title {
+        font-size: clamp(1.5rem, 4vw, 2.5rem);
+        padding: 0 0.5rem;
     }
 }
 
